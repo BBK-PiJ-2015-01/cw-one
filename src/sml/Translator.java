@@ -81,19 +81,24 @@ public class Translator {
             return null;
 
         String ins = scan();
-        switch (ins) {
-            case "add":
+        switch (LanguageOperations.valueOf(ins)) {
+            case add:
                 r = scanInt();
                 s1 = scanInt();
                 s2 = scanInt();
                 return new AddInstruction(label, r, s1, s2);
-            case "lin":
+            case lin:
                 r = scanInt();
                 s1 = scanInt();
                 return new LinInstruction(label, r, s1);
-            case "out":
+            case out:
                 r = scanInt();
                 return new OutInstruction(label, r);
+            case sub:
+                r = scanInt();
+                s1 = scanInt();
+                s2 = scanInt();
+                return new SubInstruction(label, r, s1, s2);
         }
 
         // You will have to write code here for the other instructions.

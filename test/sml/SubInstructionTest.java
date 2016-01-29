@@ -45,12 +45,6 @@ public class SubInstructionTest {
 		instance = new SubInstruction("label", -1, 0, 0);
 	}
 
-	// @Test(expected = IllegalArgumentException.class)
-	public void testOutInstructionConstructorLabelInvalidRegister() {
-
-		instance = new OutInstruction("label", 32);
-	}
-
 	@Test
 	public void testToStringConstructorLabelOpcode() {
 
@@ -66,14 +60,17 @@ public class SubInstructionTest {
 		assertEquals(expectedToString, resultToString);
 	}
 
-	// @Test
+	@Test
 	public void testToStringConstructorLabelRegister() {
 
 		String expectedLabel = "label";
-		String expectedOpCode = "out";
-		int expectedRegister = 31;
-		String expectedToString = expectedLabel + ": " + expectedOpCode + " register " + expectedRegister;
-		instance = new OutInstruction(expectedLabel, expectedRegister);
+		String expectedOpCode = "sub";
+		int lhRegister = 0;
+		int rhRegister = 0;
+		int resultRegister = 0;
+		String expectedToString = expectedLabel + ": " + expectedOpCode + " " + lhRegister + " - " + rhRegister + " to "
+				+ resultRegister;
+		instance = new SubInstruction(expectedLabel, expectedOpCode);
 		String resultToString = instance.toString();
 		assertEquals(expectedToString, resultToString);
 	}
