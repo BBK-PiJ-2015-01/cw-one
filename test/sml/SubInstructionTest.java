@@ -34,6 +34,12 @@ public class SubInstructionTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
+	public void testOutInstructionConstructorLabelInvalidR2Register() {
+
+		instance = new SubInstruction("label", 0, 0, -1);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
 	public void testOutInstructionConstructorLabelInvalidResultRegister() {
 
 		instance = new SubInstruction("label", -1, 0, 0);
