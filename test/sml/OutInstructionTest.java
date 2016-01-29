@@ -1,23 +1,30 @@
 package sml;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.Before;
 import org.junit.Test;
 
 public class OutInstructionTest {
 
-	OutInstruction instance;
+	Instruction instance;
 
 	@Before
 	public void setUp() throws Exception {
 	}
 
 	@Test
-	public void testOutInstructionConstructorLabelOpcode() {
+	public void testOutInstructionConstructorLabelValidOpcode() {
 
-		instance = new OutInstruction("label", "opcode");
+		instance = new OutInstruction("label", LanguageOperations.out.name());
 		assertNotNull(instance);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testOutInstructionConstructorLabelInValidOpcode() {
+
+		instance = new OutInstruction("label", "InValidOpcode");
 	}
 
 	@Test
