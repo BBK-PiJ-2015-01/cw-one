@@ -51,13 +51,17 @@ public class SubInstructionTest {
 		instance = new OutInstruction("label", 32);
 	}
 
-	// @Test
+	@Test
 	public void testToStringConstructorLabelOpcode() {
 
 		String expectedLabel = "label";
-		String expectedOpCode = "out";
-		String expectedToString = expectedLabel + ": " + expectedOpCode + " register 0";
-		instance = new OutInstruction(expectedLabel, expectedOpCode);
+		String expectedOpCode = "sub";
+		int lhRegister = 0;
+		int rhRegister = 2;
+		int resultRegister = 1;
+		String expectedToString = expectedLabel + ": " + expectedOpCode + lhRegister + " - " + rhRegister + " to "
+				+ resultRegister;
+		instance = new SubInstruction(expectedLabel, expectedOpCode);
 		String resultToString = instance.toString();
 		assertEquals(expectedToString, resultToString);
 	}
