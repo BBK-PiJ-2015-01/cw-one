@@ -64,7 +64,7 @@ public class MulInstructionTest {
 	public void testToStringConstructorLabelRegister() {
 
 		String expectedLabel = "label";
-		String expectedOpCode = "sub";
+		String expectedOpCode = "mul";
 		int lhRegister = 0;
 		int rhRegister = 0;
 		int resultRegister = 0;

@@ -49,7 +49,7 @@ public class DivInstructionTest {
 	public void testToStringConstructorLabelOpcode() {
 
 		String expectedLabel = "label";
-		String expectedOpCode = "mul";
+		String expectedOpCode = "div";
 		int lhRegister = 0;
 		int rhRegister = 2;
 		int resultRegister = 1;
@@ -64,7 +64,7 @@ public class DivInstructionTest {
 	public void testToStringConstructorLabelRegister() {
 
 		String expectedLabel = "label";
-		String expectedOpCode = "sub";
+		String expectedOpCode = "div";
 		int lhRegister = 0;
 		int rhRegister = 0;
 		int resultRegister = 0;

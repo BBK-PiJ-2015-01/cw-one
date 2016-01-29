@@ -34,7 +34,7 @@ public class DivInstruction extends Instruction {
 	 */
 	public DivInstruction(String label, int resultRegister, int register1, int register2) {
 
-		super(label, LanguageOperations.mul.name());
+		super(label, LanguageOperations.div.name());
 		if (!isValidRegister(resultRegister)) {
 			throw new IllegalArgumentException(String.format(ILLEGAL_REGISTER_MSG, resultRegister));
 		}
