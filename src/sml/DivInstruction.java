@@ -1,24 +1,24 @@
 package sml;
 
 /**
- * An instruction to multiply the contents of two registers and store the result
+ * An instruction to integer divide the contents of two registers and store the result
  * in another register
  * 
  * @author sbaird02
  *
  */
-public class MulInstruction extends Instruction {
+public class DivInstruction extends Instruction {
 
 	private int register1;
 	private int register2;
 	private int resultRegister;
 
-	public MulInstruction(String l, String op) {
+	public DivInstruction(String l, String op) {
 		super(l, op);
 	}
 
 	/**
-	 * Construct the Instruction supplying registers for multiplication
+	 * Construct the Instruction supplying registers for division
 	 * 
 	 * @param label
 	 *            the program label
@@ -32,7 +32,7 @@ public class MulInstruction extends Instruction {
 	 * @throws IllegalArgumentException
 	 *             if any of the supplied registers is invalid
 	 */
-	public MulInstruction(String label, int resultRegister, int register1, int register2) {
+	public DivInstruction(String label, int resultRegister, int register1, int register2) {
 
 		super(label, LanguageOperations.mul.name());
 		if (!isValidRegister(resultRegister)) {
@@ -54,11 +54,11 @@ public class MulInstruction extends Instruction {
 
 		int value1 = m.getRegisters().getRegister(register1);
 		int value2 = m.getRegisters().getRegister(register2);
-		m.getRegisters().setRegister(resultRegister, value1 * value2);
+		m.getRegisters().setRegister(resultRegister, value1 / value2);	 // Allow divide by zero exception
 	}
 
 	@Override
 	public String toString() {
-		return String.format("%s %d * %s to %d", super.toString(), register1, register2, resultRegister);
+		return String.format("%s %d / %s to %d", super.toString(), register1, register2, resultRegister);
 	}
 }
