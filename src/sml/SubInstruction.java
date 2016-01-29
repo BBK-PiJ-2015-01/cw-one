@@ -21,9 +21,9 @@ public class SubInstruction extends Instruction {
 	public SubInstruction(String label,  int resultRegister, int register1, int register2) {
 
 		super(label, LanguageOperations.sub.name());
-//		if (!isValidRegister(resultRegister)) {
-//			throw new IllegalArgumentException(String.format(ILLEGAL_REGISTER_MSG, resultRegister));
-//		}
+		if (!isValidRegister(resultRegister)) {
+			throw new IllegalArgumentException(String.format(ILLEGAL_REGISTER_MSG, resultRegister));
+		}
 		this.resultRegister = resultRegister;
 //		if (!isValidRegister(register1)) {
 //			throw new IllegalArgumentException(String.format(ILLEGAL_REGISTER_MSG, register1));
