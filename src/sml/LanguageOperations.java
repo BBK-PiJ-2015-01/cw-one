@@ -10,6 +10,6 @@ package sml;
  */
 public enum LanguageOperations {
 
-	lin, out, add, sub, mul, div;
+	lin, out, add, sub, mul, div, brz;
 
 }

@@ -75,7 +75,7 @@ public class Translator {
         int s1; // Possible operands of the instruction
         int s2;
         int r;
-        int x;
+//        int x;
 
         if (line.equals(""))
             return null;
