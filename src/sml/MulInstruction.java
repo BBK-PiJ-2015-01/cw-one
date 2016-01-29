@@ -27,7 +27,8 @@ public class MulInstruction extends Instruction {
 	 * @param register1
 	 *            an integer specifying the register which holds the first value
 	 * @param register2
-	 *            an integer specifying the register which holds the second value
+	 *            an integer specifying the register which holds the second
+	 *            value
 	 * @throws IllegalArgumentException
 	 *             if any of the supplied registers is invalid
 	 */
@@ -51,9 +52,9 @@ public class MulInstruction extends Instruction {
 	@Override
 	public void execute(Machine m) {
 
- //       int value1 = m.getRegisters().getRegister(register1);
- //      int value2 = m.getRegisters().getRegister(register2);
- //       m.getRegisters().setRegister(resultRegister, value1 - value2);
+		int value1 = m.getRegisters().getRegister(register1);
+		int value2 = m.getRegisters().getRegister(register2);
+		m.getRegisters().setRegister(resultRegister, value1 * value2);
 	}
 
 	@Override
