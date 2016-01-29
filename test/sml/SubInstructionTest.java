@@ -28,18 +28,24 @@ public class SubInstructionTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
+	public void testOutInstructionConstructorLabelInvalidR1Register() {
+
+		instance = new SubInstruction("label", 0, -1, 0);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
 	public void testOutInstructionConstructorLabelInvalidResultRegister() {
 
 		instance = new SubInstruction("label", -1, 0, 0);
 	}
 
-//	@Test(expected = IllegalArgumentException.class)
+	// @Test(expected = IllegalArgumentException.class)
 	public void testOutInstructionConstructorLabelInvalidRegister() {
 
 		instance = new OutInstruction("label", 32);
 	}
 
-//	@Test
+	// @Test
 	public void testToStringConstructorLabelOpcode() {
 
 		String expectedLabel = "label";
@@ -50,7 +56,7 @@ public class SubInstructionTest {
 		assertEquals(expectedToString, resultToString);
 	}
 
-//	@Test
+	// @Test
 	public void testToStringConstructorLabelRegister() {
 
 		String expectedLabel = "label";
