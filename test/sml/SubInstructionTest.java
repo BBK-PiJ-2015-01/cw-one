@@ -59,9 +59,9 @@ public class SubInstructionTest {
 		int lhRegister = 0;
 		int rhRegister = 2;
 		int resultRegister = 1;
-		String expectedToString = expectedLabel + ": " + expectedOpCode + lhRegister + " - " + rhRegister + " to "
+		String expectedToString = expectedLabel + ": " + expectedOpCode + " " + lhRegister + " - " + rhRegister + " to "
 				+ resultRegister;
-		instance = new SubInstruction(expectedLabel, expectedOpCode);
+		instance = new SubInstruction(expectedLabel, resultRegister, lhRegister, rhRegister);
 		String resultToString = instance.toString();
 		assertEquals(expectedToString, resultToString);
 	}
