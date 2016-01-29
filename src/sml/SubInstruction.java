@@ -25,9 +25,9 @@ public class SubInstruction extends Instruction {
 			throw new IllegalArgumentException(String.format(ILLEGAL_REGISTER_MSG, resultRegister));
 		}
 		this.resultRegister = resultRegister;
-//		if (!isValidRegister(register1)) {
-//			throw new IllegalArgumentException(String.format(ILLEGAL_REGISTER_MSG, register1));
-//		}
+		if (!isValidRegister(register1)) {
+			throw new IllegalArgumentException(String.format(ILLEGAL_REGISTER_MSG, register1));
+		}
 		this.register1 = register1;
 		this.register2 = register2;
 	}
