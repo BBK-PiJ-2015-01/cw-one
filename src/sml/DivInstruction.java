@@ -1,5 +1,7 @@
 package sml;
 
+import static sml.LanguageOperation.*;
+
 /**
  * An instruction to integer divide the contents of two registers and store the result
  * in another register
@@ -7,6 +9,7 @@ package sml;
  * @author sbaird02
  *
  */
+@InstructionType(div)
 public class DivInstruction extends Instruction {
 
 	private int register1;
@@ -34,7 +37,7 @@ public class DivInstruction extends Instruction {
 	 */
 	public DivInstruction(String label, int resultRegister, int register1, int register2) {
 
-		super(label, LanguageOperations.div.name());
+		super(label, div.name());
 		if (!isValidRegister(resultRegister)) {
 			throw new IllegalArgumentException(String.format(ILLEGAL_REGISTER_MSG, resultRegister));
 		}

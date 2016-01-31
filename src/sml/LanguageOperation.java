@@ -8,7 +8,7 @@ package sml;
  * @author sbaird02
  *
  */
-public enum LanguageOperations {
+public enum LanguageOperation {
 
 	lin, out, add, sub, mul, div, bnz;
 

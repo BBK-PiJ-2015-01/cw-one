@@ -1,5 +1,8 @@
 package sml;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * This class is the superclass for machine instructions
  *
@@ -15,6 +18,12 @@ public abstract class Instruction {
 	protected final String ILLEGAL_REGISTER_MSG = "An illegal register was specified: %d";
 	//
 	protected final String ILLEGAL_OPCODE_MSG = "An illegal language operation was specified: %s";
+	//
+	protected final Set<String> requiredLabels;
+
+	{
+		requiredLabels = new HashSet<>();
+	}
 
 	// Constructor: an instruction with label l and opcode op
 	// (op must be an operation of the language)
@@ -24,7 +33,7 @@ public abstract class Instruction {
 		if (!isValidOpCode(op)) {
 			throw new IllegalArgumentException(String.format(ILLEGAL_OPCODE_MSG, op));
 		}
-		this.opcode = op;
+		opcode = op;
 	}
 
 	// = the representation "label: opcode" of this Instruction
@@ -40,10 +49,21 @@ public abstract class Instruction {
 
 	/**
 	 * Use the label to identify the instruction in the program
+	 * 
 	 * @return label
 	 */
 	public String getLabel() {
 		return label;
+	}
+
+	/**
+	 * Return the set of instructions that must be present to ensure this
+	 * Instruction can execute correctly
+	 * 
+	 * @return the set of instructions
+	 */
+	public Set<String> getRequiredLabels() {
+		return requiredLabels;
 	}
 
 	/**
@@ -67,7 +87,7 @@ public abstract class Instruction {
 	protected boolean isValidOpCode(String op) {
 
 		try {
-			LanguageOperations.valueOf(op);
+			LanguageOperation.valueOf(op);
 		} catch (IllegalArgumentException e) {
 			return false;
 		}
@@ -98,5 +118,5 @@ public abstract class Instruction {
 			return false;
 		return true;
 	}
-	
+
 }

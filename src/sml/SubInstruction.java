@@ -1,5 +1,7 @@
 package sml;
 
+import static sml.LanguageOperation.*;
+
 /**
  * An instruction to subtract the contents of two registers and store the result
  * in another register
@@ -7,6 +9,7 @@ package sml;
  * @author sbaird02
  *
  */
+@InstructionType(sub)
 public class SubInstruction extends Instruction {
 
 	private int register1;
@@ -35,7 +38,7 @@ public class SubInstruction extends Instruction {
 	 */
 	public SubInstruction(String label, int resultRegister, int register1, int register2) {
 
-		super(label, LanguageOperations.sub.name());
+		super(label, sub.name());
 		if (!isValidRegister(resultRegister)) {
 			throw new IllegalArgumentException(String.format(ILLEGAL_REGISTER_MSG, resultRegister));
 		}

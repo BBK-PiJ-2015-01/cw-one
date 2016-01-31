@@ -1,11 +1,13 @@
 package sml;
 
+import static sml.LanguageOperation.*;
+
 /**
  * This class ....
  *
  * @author someone
  */
-
+@InstructionType(add)
 public class AddInstruction extends Instruction {
 
     private int result;
@@ -17,7 +19,7 @@ public class AddInstruction extends Instruction {
     }
 
     public AddInstruction(String label, int result, int op1, int op2) {
-        this(label, "add");
+        this(label, add.name());
         this.result = result;
         this.op1 = op1;
         this.op2 = op2;

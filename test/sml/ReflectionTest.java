@@ -1,6 +1,7 @@
 package sml;
 
 import java.io.File;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Parameter;
 import java.nio.file.Path;
@@ -22,6 +23,11 @@ public class ReflectionTest {
 			try {
 				Class<?> c = Class.forName(className);
 				if (instructionSuperclass.equals(c.getSuperclass())) {
+					InstructionType itAnotation = c.getAnnotation(InstructionType.class);
+					if (itAnotation != null) {
+						System.out.println(String.format("'%s' is annotated with %s", className, itAnotation.value()));
+					}
+
 					System.out.println(className + " is an " + instructionSuperclass.getSimpleName());
 					for (Constructor con : c.getConstructors()) {
 						for (Parameter param : con.getParameters()) {
@@ -29,7 +35,7 @@ public class ReflectionTest {
 						}
 					}
 				}
-			} catch (ClassNotFoundException e) {
+			} catch (ClassNotFoundException  e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

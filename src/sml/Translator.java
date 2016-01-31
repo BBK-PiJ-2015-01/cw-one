@@ -2,9 +2,17 @@ package sml;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
+import java.util.Set;
 
 /*
  * The translator of a <b>S</b><b>M</b>al<b>L</b> program.
@@ -19,9 +27,47 @@ public class Translator {
 	private Labels labels; // The labels of the program being translated
 	private ArrayList<Instruction> program; // The program to be created
 	private String fileName; // source file of SML code
+	//
+	private final Map<LanguageOperation, Constructor<?>> instructionMap;
+	//
+	private final Set<String> requiredLabels;
+	//
+	private final String INSTRUCTION_CLASS_PACKAGE = "sml";
+
+	{
+		instructionMap = new HashMap<>();
+		requiredLabels = new HashSet<>();
+	}
 
 	public Translator(String fileName) {
 		this.fileName = SRC + "/" + fileName;
+		populateInstructionMap();
+	}
+
+	private void populateInstructionMap() {
+
+		Path instructionsPath = Paths.get(System.getProperty("user.dir")).resolve(SRC)
+				.resolve(INSTRUCTION_CLASS_PACKAGE);
+		Class<?> instructionSuperclass = Instruction.class; // The superclass
+		File[] packageFiles = instructionsPath.toFile().listFiles();
+		for (File f : packageFiles) {
+			String classBaseName = INSTRUCTION_CLASS_PACKAGE + "." + f.getName().split("\\.")[0];
+			try {
+				Class<?> c = Class.forName(classBaseName);
+				if (instructionSuperclass.equals(c.getSuperclass()) && c.isAnnotationPresent(InstructionType.class)) {
+					// Add the appropriate constructor to the map
+					InstructionType typeAnnotation = c.getAnnotation(InstructionType.class);
+					LanguageOperation opCode = typeAnnotation.value();
+					for (Constructor<?> cons : c.getConstructors()) {
+						instructionMap.put(opCode, cons);
+						break;
+					}
+				}
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	// translate the small program in the file into lab (the labels) and
@@ -39,7 +85,8 @@ public class Translator {
 			try {
 				line = sc.nextLine();
 			} catch (NoSuchElementException ioE) {
-				return false;
+				// End of input file
+				//return false;
 			}
 
 			// Each iteration processes line and reads the next line into line
@@ -58,13 +105,22 @@ public class Translator {
 				try {
 					line = sc.nextLine();
 				} catch (NoSuchElementException ioE) {
-					return false;
+					// End of input file
+					//return false;
+					break;
 				}
 			}
 		} catch (IOException ioE) {
 			System.out.println("File: IO error " + ioE.getMessage());
 			return false;
 		}
+		// Check program validity with respect to branch statements
+		final int LABEL_NOT_FOUND = -1;
+		for (String label : requiredLabels) {
+			if (labels.indexOf(label) == LABEL_NOT_FOUND) {
+				throw new IllegalStateException(String.format("Invalid program: required label '%s' not found", label));
+			}
+		}		
 		return true;
 	}
 
@@ -75,13 +131,15 @@ public class Translator {
 		int s1; // Possible operands of the instruction
 		int s2;
 		int r;
-		String brzLabel;
+//		String brzLabel;
 
 		if (line.equals(""))
 			return null;
 
+		String[] args = line.split("\\s"); // split the line into arguments
+
 		String ins = scan();
-		switch (LanguageOperations.valueOf(ins)) {
+		switch (LanguageOperation.valueOf(ins)) {
 		case add:
 			r = scanInt();
 			s1 = scanInt();
@@ -110,13 +168,68 @@ public class Translator {
 			s2 = scanInt();
 			return new DivInstruction(label, r, s1, s2);
 		case bnz:
-			r = scanInt();
-			brzLabel = scan();
-			return new BnzInstruction(label, r, brzLabel);
+			LanguageOperation opCode = null;
+			try {
+				opCode = LanguageOperation.valueOf(ins);
+			} catch (IllegalArgumentException | NullPointerException e) {
+				throw new IllegalStateException(String.format("Unknown instruction code: %s", ins));
+			}
+			if (!instructionMap.containsKey(opCode)) {
+				throw new IllegalStateException(String.format("No instruction type for: %s", ins));
+			}
+			int argIndex = 0;
+			// r = scanInt();
+			// brzLabel = scan();
+			Constructor<Instruction> constructor = (Constructor<Instruction>) instructionMap
+					.get(LanguageOperation.valueOf(ins));
+
+			// List of constructor parameters
+			Object[] oArgs = new Object[constructor.getParameterCount()];
+
+			// Instruction arguments are supplied as Strings so they need
+			// converting to their appropriate type
+			for (Class<?> o : constructor.getParameterTypes()) {
+				if (argIndex == 0) {
+					oArgs[0] = label; // First arg is always the label stripped
+										// out earlier
+				} else {
+					oArgs[argIndex] = convertStringto(args[argIndex + 1], o);
+				}
+				argIndex++;
+			}
+			// Generate the Instruction from its Constructor
+			Instruction validInstruction = null;
+			try {
+				validInstruction = (Instruction) constructor.newInstance(oArgs);
+			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+					| InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return null;
+			}
+			// Update the set of all required labels
+			requiredLabels.addAll(validInstruction.getRequiredLabels());
+			return validInstruction;
 		}
 
 		// You will have to write code here for the other instructions.
 
+		return null;
+	}
+
+	private Object convertStringto(String value, Class<?> t) {
+
+		for (Constructor<?> tCon : t.getConstructors()) {
+			if (tCon.getParameterCount() == 1 && tCon.getParameterTypes()[0].equals(String.class)) {
+				try {
+					return tCon.newInstance(value);
+				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+						| InvocationTargetException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
 		return null;
 	}
 

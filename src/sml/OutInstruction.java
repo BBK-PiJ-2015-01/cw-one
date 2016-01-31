@@ -1,10 +1,13 @@
 package sml;
 
+import static sml.LanguageOperation.*;
+
 /**
  * 
  * @author sbaird02
  *
  */
+@InstructionType(out)
 public class OutInstruction extends Instruction {
 	
 	private int register;
@@ -15,7 +18,7 @@ public class OutInstruction extends Instruction {
 
 	public OutInstruction(String label, int register) {
 		
-		super(label, LanguageOperations.out.name());
+		super(label, out.name());
 		if (!isValidRegister(register)) {
 			throw new IllegalArgumentException(String.format(ILLEGAL_REGISTER_MSG, register));
 		}

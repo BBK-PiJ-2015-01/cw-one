@@ -1,6 +1,7 @@
 package sml;
 
 import java.util.Optional;
+import static sml.LanguageOperation.*;
 
 /**
  * An instruction to branch to a labelled instruction if the contents of the
@@ -9,17 +10,20 @@ import java.util.Optional;
  * @author sbaird02
  *
  */
+@InstructionType(bnz)
 public class BnzInstruction extends Instruction {
 
 	private int testRegister;
 	private String branchLabel;
-
+	
 	private final String ILLEGAL_BRANCH_LABEL_MSG = "The branch label cannot be null";
 	private final String UNKNOWN_BRANCH_LABEL_MSG = "Unable to locate the branch label: %s";
+	//
+	
 
-	public BnzInstruction(String l, String op) {
-		super(l, op);
-	}
+//	public BnzInstruction(String l, String op) {
+//		super(l, op);
+//	}
 
 	/**
 	 * Construct the Instruction supplying test register and branch label. The
@@ -34,9 +38,9 @@ public class BnzInstruction extends Instruction {
 	 * @throws IllegalArgumentException
 	 *             if the testRegister is invalid or the branch label is null
 	 */
-	public BnzInstruction(String label, int testRegister, String branchLabel) {
+	public BnzInstruction(String label, Integer testRegister, String branchLabel) {
 
-		super(label, LanguageOperations.bnz.name());
+		super(label, bnz.name());
 		if (!isValidRegister(testRegister)) {
 			throw new IllegalArgumentException(String.format(ILLEGAL_REGISTER_MSG, testRegister));
 		}
@@ -45,6 +49,7 @@ public class BnzInstruction extends Instruction {
 			throw new IllegalArgumentException(ILLEGAL_BRANCH_LABEL_MSG);
 		}
 		this.branchLabel = branchLabel;
+		requiredLabels.add(branchLabel);
 	}
 
 	@Override
