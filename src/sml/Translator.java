@@ -61,6 +61,7 @@ public class Translator {
 
 		Path instructionsPath = Paths.get(System.getProperty("user.dir")).resolve(SRC)
 				.resolve(INSTRUCTION_CLASS_PACKAGE);
+		// TODO: Check that the Path is a directory
 		Class<?> instructionSuperclass = Instruction.class; // The superclass
 		File[] packageFiles = instructionsPath.toFile().listFiles();
 		for (File f : packageFiles) {
@@ -179,6 +180,7 @@ public class Translator {
 			s1 = scanInt();
 			s2 = scanInt();
 			return new DivInstruction(label, r, s1, s2);
+		case brn:
 		case bnz:
 			LanguageOperation opCode = null;
 			try {
