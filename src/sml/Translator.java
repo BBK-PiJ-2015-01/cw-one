@@ -32,11 +32,24 @@ public class Translator {
 	//
 	private final Set<String> requiredLabels;
 	//
+	// To allow primitive types to be passed in Constructor args
+	//
+	private final Map<String, Class<?>> primitiveBoxClasses;
+	//
 	private final String INSTRUCTION_CLASS_PACKAGE = "sml";
 
 	{
 		instructionMap = new HashMap<>();
 		requiredLabels = new HashSet<>();
+		primitiveBoxClasses = new HashMap<>();
+		primitiveBoxClasses.put(int.class.getTypeName(), Integer.class);
+		primitiveBoxClasses.put(double.class.getTypeName(), Double.class);
+		primitiveBoxClasses.put(float.class.getTypeName(), Float.class);
+		primitiveBoxClasses.put(long.class.getTypeName(), Long.class);
+		primitiveBoxClasses.put(boolean.class.getTypeName(), Boolean.class);
+		primitiveBoxClasses.put(char.class.getTypeName(), Character.class);
+		primitiveBoxClasses.put(byte.class.getTypeName(), Byte.class);
+		primitiveBoxClasses.put(short.class.getTypeName(), Short.class);
 	}
 
 	public Translator(String fileName) {
@@ -86,7 +99,7 @@ public class Translator {
 				line = sc.nextLine();
 			} catch (NoSuchElementException ioE) {
 				// End of input file
-				//return false;
+				// return false;
 			}
 
 			// Each iteration processes line and reads the next line into line
@@ -106,7 +119,7 @@ public class Translator {
 					line = sc.nextLine();
 				} catch (NoSuchElementException ioE) {
 					// End of input file
-					//return false;
+					// return false;
 					break;
 				}
 			}
@@ -120,7 +133,7 @@ public class Translator {
 			if (labels.indexOf(label) == LABEL_NOT_FOUND) {
 				throw new IllegalStateException(String.format("Invalid program: required label '%s' not found", label));
 			}
-		}		
+		}
 		return true;
 	}
 
@@ -177,7 +190,7 @@ public class Translator {
 				throw new IllegalStateException(String.format("No instruction type for: %s", ins));
 			}
 			int argIndex = 0;
-			Constructor<?> constructor =  instructionMap.get(LanguageOperation.valueOf(ins));
+			Constructor<?> constructor = instructionMap.get(LanguageOperation.valueOf(ins));
 
 			// List of constructor parameters
 			Object[] oArgs = new Object[constructor.getParameterCount()];
@@ -213,6 +226,11 @@ public class Translator {
 	}
 
 	private Object convertStringto(String value, Class<?> t) {
+
+		// Autobox the primitives
+		if (t.isPrimitive()) {
+			t = primitiveBoxClasses.get(t.getTypeName());
+		}
 
 		for (Constructor<?> tCon : t.getConstructors()) {
 			if (tCon.getParameterCount() == 1 && tCon.getParameterTypes()[0].equals(String.class)) {

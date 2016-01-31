@@ -38,7 +38,7 @@ public class BnzInstruction extends Instruction {
 	 * @throws IllegalArgumentException
 	 *             if the testRegister is invalid or the branch label is null
 	 */
-	public BnzInstruction(String label, Integer testRegister, String branchLabel) {
+	public BnzInstruction(String label, int testRegister, String branchLabel) {
 
 		super(label, bnz.name());
 		if (!isValidRegister(testRegister)) {
