@@ -17,7 +17,7 @@ public class OutInstructionTest {
 	@Test
 	public void testOutInstructionConstructorLabelValidOpcode() {
 
-		instance = new OutInstruction("label", LanguageOperations.out.name());
+		instance = new OutInstruction("label", LanguageOperation.out.name());
 		assertNotNull(instance);
 	}
 

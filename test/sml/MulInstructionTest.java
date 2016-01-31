@@ -17,7 +17,7 @@ public class MulInstructionTest {
 	@Test
 	public void testOutInstructionConstructorLabelValidOpcode() {
 
-		instance = new MulInstruction("label", LanguageOperations.mul.name());
+		instance = new MulInstruction("label", LanguageOperation.mul.name());
 		assertNotNull(instance);
 	}
 

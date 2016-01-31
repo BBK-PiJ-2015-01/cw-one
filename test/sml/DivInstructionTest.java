@@ -17,7 +17,7 @@ public class DivInstructionTest {
 	@Test
 	public void testOutInstructionConstructorLabelValidOpcode() {
 
-		instance = new DivInstruction("label", LanguageOperations.div.name());
+		instance = new DivInstruction("label", LanguageOperation.div.name());
 		assertNotNull(instance);
 	}
 

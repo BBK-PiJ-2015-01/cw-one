@@ -131,7 +131,6 @@ public class Translator {
 		int s1; // Possible operands of the instruction
 		int s2;
 		int r;
-//		String brzLabel;
 
 		if (line.equals(""))
 			return null;
@@ -178,10 +177,7 @@ public class Translator {
 				throw new IllegalStateException(String.format("No instruction type for: %s", ins));
 			}
 			int argIndex = 0;
-			// r = scanInt();
-			// brzLabel = scan();
-			Constructor<Instruction> constructor = (Constructor<Instruction>) instructionMap
-					.get(LanguageOperation.valueOf(ins));
+			Constructor<?> constructor =  instructionMap.get(LanguageOperation.valueOf(ins));
 
 			// List of constructor parameters
 			Object[] oArgs = new Object[constructor.getParameterCount()];
@@ -203,7 +199,6 @@ public class Translator {
 				validInstruction = (Instruction) constructor.newInstance(oArgs);
 			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
 					| InvocationTargetException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				return null;
 			}

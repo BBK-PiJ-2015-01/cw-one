@@ -17,7 +17,7 @@ public class SubInstructionTest {
 	@Test
 	public void testOutInstructionConstructorLabelValidOpcode() {
 
-		instance = new SubInstruction("label", LanguageOperations.sub.name());
+		instance = new SubInstruction("label", LanguageOperation.sub.name());
 		assertNotNull(instance);
 	}
 
