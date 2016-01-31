@@ -199,8 +199,8 @@ public class Translator {
 			// converting to their appropriate type
 			for (Class<?> o : constructor.getParameterTypes()) {
 				if (argIndex == 0) {
-					oArgs[0] = label; // First arg is always the label stripped
-										// out earlier
+					// First arg is always the label stripped out earlier
+					oArgs[0] = label;
 				} else {
 					oArgs[argIndex] = convertStringto(args[argIndex + 1], o);
 				}
