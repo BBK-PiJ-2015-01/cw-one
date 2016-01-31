@@ -1,7 +1,7 @@
 package sml;
 
 /**
- * This class is the superclass of the classes for machine instructions
+ * This class is the superclass for machine instructions
  *
  * @author sbaird02
  */
