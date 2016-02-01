@@ -16,10 +16,6 @@ public class SubInstruction extends Instruction {
 	private int register2;
 	private int resultRegister;
 
-	public SubInstruction(String l, String op) {
-		super(l, op);
-	}
-
 	/**
 	 * Construct the Instruction supplying registers for subtraction
 	 * 

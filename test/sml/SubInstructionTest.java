@@ -14,18 +14,18 @@ public class SubInstructionTest {
 	public void setUp() throws Exception {
 	}
 
-	@Test
-	public void testOutInstructionConstructorLabelValidOpcode() {
+//	@Test
+//	public void testOutInstructionConstructorLabelValidOpcode() {
 
-		instance = new SubInstruction("label", LanguageOperation.sub.name());
-		assertNotNull(instance);
-	}
+//		instance = new SubInstruction("label", LanguageOperation.sub.name());
+//		assertNotNull(instance);
+//	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testOutInstructionConstructorLabelInValidOpcode() {
+//	@Test(expected = IllegalArgumentException.class)
+//	public void testOutInstructionConstructorLabelInValidOpcode() {
 
-		instance = new SubInstruction("label", "InValidOpcode");
-	}
+//		instance = new SubInstruction("label", "InValidOpcode");
+//	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testOutInstructionConstructorLabelInvalidR1Register() {
@@ -56,21 +56,6 @@ public class SubInstructionTest {
 		String expectedToString = expectedLabel + ": " + expectedOpCode + " " + lhRegister + " - " + rhRegister + " to "
 				+ resultRegister;
 		instance = new SubInstruction(expectedLabel, resultRegister, lhRegister, rhRegister);
-		String resultToString = instance.toString();
-		assertEquals(expectedToString, resultToString);
-	}
-
-	@Test
-	public void testToStringConstructorLabelRegister() {
-
-		String expectedLabel = "label";
-		String expectedOpCode = "sub";
-		int lhRegister = 0;
-		int rhRegister = 0;
-		int resultRegister = 0;
-		String expectedToString = expectedLabel + ": " + expectedOpCode + " " + lhRegister + " - " + rhRegister + " to "
-				+ resultRegister;
-		instance = new SubInstruction(expectedLabel, expectedOpCode);
 		String resultToString = instance.toString();
 		assertEquals(expectedToString, resultToString);
 	}

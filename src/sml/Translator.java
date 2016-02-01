@@ -70,6 +70,10 @@ public class Translator {
 				Class<?> c = Class.forName(classBaseName);
 				if (instructionSuperclass.equals(c.getSuperclass()) && c.isAnnotationPresent(InstructionType.class)) {
 					// Add the appropriate constructor to the map
+//					InstructionClassProvider classProvider;
+//					for (Class<?> c : classProvider.getClasses(){
+						
+//					}
 					InstructionType typeAnnotation = c.getAnnotation(InstructionType.class);
 					LanguageOperation opCode = typeAnnotation.value();
 					for (Constructor<?> cons : c.getConstructors()) {
@@ -142,9 +146,6 @@ public class Translator {
 	// removed. Translate line into an instruction with label label
 	// and return the instruction
 	public Instruction getInstruction(String label) {
-		int s1; // Possible operands of the instruction
-		int s2;
-		int r;
 
 		if (line.equals(""))
 			return null;
@@ -152,79 +153,45 @@ public class Translator {
 		String[] args = line.split("\\s"); // split the line into arguments
 
 		String ins = scan();
-		switch (LanguageOperation.valueOf(ins)) {
-		case add:
-			r = scanInt();
-			s1 = scanInt();
-			s2 = scanInt();
-			return new AddInstruction(label, r, s1, s2);
-		case lin:
-			r = scanInt();
-			s1 = scanInt();
-			return new LinInstruction(label, r, s1);
-		case out:
-			r = scanInt();
-			return new OutInstruction(label, r);
-		case sub:
-			r = scanInt();
-			s1 = scanInt();
-			s2 = scanInt();
-			return new SubInstruction(label, r, s1, s2);
-		case mul:
-			r = scanInt();
-			s1 = scanInt();
-			s2 = scanInt();
-			return new MulInstruction(label, r, s1, s2);
-		case div:
-			r = scanInt();
-			s1 = scanInt();
-			s2 = scanInt();
-			return new DivInstruction(label, r, s1, s2);
-		case brn:
-		case bnz:
-			LanguageOperation opCode = null;
-			try {
-				opCode = LanguageOperation.valueOf(ins);
-			} catch (IllegalArgumentException | NullPointerException e) {
-				throw new IllegalStateException(String.format("Unknown instruction code: %s", ins));
-			}
-			if (!instructionMap.containsKey(opCode)) {
-				throw new IllegalStateException(String.format("No instruction type for: %s", ins));
-			}
-			int argIndex = 0;
-			Constructor<?> constructor = instructionMap.get(LanguageOperation.valueOf(ins));
-
-			// List of constructor parameters
-			Object[] oArgs = new Object[constructor.getParameterCount()];
-
-			// Instruction arguments are supplied as Strings so they need
-			// converting to their appropriate type
-			for (Class<?> o : constructor.getParameterTypes()) {
-				if (argIndex == 0) {
-					// First arg is always the label stripped out earlier
-					oArgs[0] = label;
-				} else {
-					oArgs[argIndex] = convertStringto(args[argIndex + 1], o);
-				}
-				argIndex++;
-			}
-			// Generate the Instruction from its Constructor
-			Instruction validInstruction = null;
-			try {
-				validInstruction = (Instruction) constructor.newInstance(oArgs);
-			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-					| InvocationTargetException e) {
-				e.printStackTrace();
-				return null;
-			}
-			// Update the set of all required labels
-			requiredLabels.addAll(validInstruction.getRequiredLabels());
-			return validInstruction;
+		LanguageOperation opCode = null;
+		try {
+			opCode = LanguageOperation.valueOf(ins);
+		} catch (IllegalArgumentException | NullPointerException e) {
+			throw new IllegalStateException(String.format("Unknown instruction code: %s", ins));
 		}
+		if (!instructionMap.containsKey(opCode)) {
+			throw new IllegalStateException(String.format("No instruction type for: %s", ins));
+		}
+		int argIndex = 0;
+		Constructor<?> constructor = instructionMap.get(LanguageOperation.valueOf(ins));
 
-		// You will have to write code here for the other instructions.
+		// List of constructor parameters
+		Object[] oArgs = new Object[constructor.getParameterCount()];
 
-		return null;
+		// Instruction arguments are supplied as Strings so they need
+		// converting to their appropriate type
+		for (Class<?> o : constructor.getParameterTypes()) {
+			if (argIndex == 0) {
+				// First arg is always the label stripped out earlier
+				oArgs[0] = label;
+			} else {
+				oArgs[argIndex] = convertStringto(args[argIndex + 1], o);
+			}
+			argIndex++;
+		}
+		// Generate the Instruction from its Constructor
+		Instruction validInstruction = null;
+		try {
+			validInstruction = (Instruction) constructor.newInstance(oArgs);
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException e) {
+			e.printStackTrace();
+			return null;
+		}
+		// Update the set of all required labels
+		requiredLabels.addAll(validInstruction.getRequiredLabels());
+		return validInstruction;
+
 	}
 
 	private Object convertStringto(String value, Class<?> t) {

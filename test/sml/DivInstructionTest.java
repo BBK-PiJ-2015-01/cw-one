@@ -14,18 +14,18 @@ public class DivInstructionTest {
 	public void setUp() throws Exception {
 	}
 
-	@Test
-	public void testOutInstructionConstructorLabelValidOpcode() {
+//	@Test
+//	public void testOutInstructionConstructorLabelValidOpcode() {
 
-		instance = new DivInstruction("label", LanguageOperation.div.name());
-		assertNotNull(instance);
-	}
+//		instance = new DivInstruction("label", LanguageOperation.div.name());
+//		assertNotNull(instance);
+//	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testOutInstructionConstructorLabelInValidOpcode() {
+//	@Test(expected = IllegalArgumentException.class)
+//	public void testOutInstructionConstructorLabelInValidOpcode() {
 
-		instance = new DivInstruction("label", "InValidOpcode");
-	}
+//		instance = new DivInstruction("label", "InValidOpcode");
+//	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testOutInstructionConstructorLabelInvalidR1Register() {
@@ -60,18 +60,5 @@ public class DivInstructionTest {
 		assertEquals(expectedToString, resultToString);
 	}
 
-	@Test
-	public void testToStringConstructorLabelRegister() {
 
-		String expectedLabel = "label";
-		String expectedOpCode = "div";
-		int lhRegister = 0;
-		int rhRegister = 0;
-		int resultRegister = 0;
-		String expectedToString = expectedLabel + ": " + expectedOpCode + " " + lhRegister + " / " + rhRegister + " to "
-				+ resultRegister;
-		instance = new DivInstruction(expectedLabel, expectedOpCode);
-		String resultToString = instance.toString();
-		assertEquals(expectedToString, resultToString);
-	}
 }

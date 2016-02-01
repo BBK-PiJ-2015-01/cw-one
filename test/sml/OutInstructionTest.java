@@ -14,18 +14,18 @@ public class OutInstructionTest {
 	public void setUp() throws Exception {
 	}
 
-	@Test
-	public void testOutInstructionConstructorLabelValidOpcode() {
+//	@Test
+//	public void testOutInstructionConstructorLabelValidOpcode() {
 
-		instance = new OutInstruction("label", LanguageOperation.out.name());
-		assertNotNull(instance);
-	}
+//		instance = new OutInstruction("label", LanguageOperation.out.name());
+//		assertNotNull(instance);
+//	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testOutInstructionConstructorLabelInValidOpcode() {
+//	@Test(expected = IllegalArgumentException.class)
+//	public void testOutInstructionConstructorLabelInValidOpcode() {
 
-		instance = new OutInstruction("label", "InValidOpcode");
-	}
+//		instance = new OutInstruction("label", "InValidOpcode");
+//	}
 
 	@Test
 	public void testOutInstructionConstructorLabelRegister() {
@@ -38,17 +38,6 @@ public class OutInstructionTest {
 	public void testOutInstructionConstructorLabelInvalidRegister() {
 
 		instance = new OutInstruction("label", 32);
-	}
-
-	@Test
-	public void testToStringConstructorLabelOpcode() {
-
-		String expectedLabel = "label";
-		String expectedOpCode = "out";
-		String expectedToString = expectedLabel + ": " + expectedOpCode + " register 0";
-		instance = new OutInstruction(expectedLabel, expectedOpCode);
-		String resultToString = instance.toString();
-		assertEquals(expectedToString, resultToString);
 	}
 
 	@Test

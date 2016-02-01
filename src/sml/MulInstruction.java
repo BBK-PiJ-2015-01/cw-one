@@ -16,9 +16,6 @@ public class MulInstruction extends Instruction {
 	private int register2;
 	private int resultRegister;
 
-	public MulInstruction(String l, String op) {
-		super(l, op);
-	}
 
 	/**
 	 * Construct the Instruction supplying registers for multiplication

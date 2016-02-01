@@ -12,10 +12,6 @@ public class OutInstruction extends Instruction {
 	
 	private int register;
 
-	public OutInstruction(String l, String op) {
-		super(l, op);
-	}
-
 	public OutInstruction(String label, int register) {
 		
 		super(label, out.name());

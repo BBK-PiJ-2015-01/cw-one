@@ -16,10 +16,6 @@ public class DivInstruction extends Instruction {
 	private int register2;
 	private int resultRegister;
 
-	public DivInstruction(String l, String op) {
-		super(l, op);
-	}
-
 	/**
 	 * Construct the Instruction supplying registers for division
 	 * 
