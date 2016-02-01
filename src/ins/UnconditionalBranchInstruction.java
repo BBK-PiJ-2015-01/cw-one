@@ -1,6 +1,11 @@
-package sml;
+package ins;
 
 import java.util.Optional;
+
+import sml.Instruction;
+import sml.InstructionType;
+import sml.Machine;
+
 import static sml.LanguageOperation.*;
 
 /**

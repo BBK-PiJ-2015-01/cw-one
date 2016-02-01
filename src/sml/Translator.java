@@ -35,8 +35,6 @@ public class Translator {
 	// To allow primitive types to be passed in Constructor args
 	//
 	private final Map<String, Class<?>> primitiveBoxClasses;
-	//
-	private final String INSTRUCTION_CLASS_PACKAGE = "sml";
 
 	{
 		instructionMap = new HashMap<>();
@@ -57,34 +55,17 @@ public class Translator {
 		populateInstructionMap();
 	}
 
+	/*
+	 * Populate the instruction map with valid instructions
+	 */
 	private void populateInstructionMap() {
 
-		Path instructionsPath = Paths.get(System.getProperty("user.dir")).resolve(SRC)
-				.resolve(INSTRUCTION_CLASS_PACKAGE);
-		// TODO: Check that the Path is a directory
-		Class<?> instructionSuperclass = Instruction.class; // The superclass
-		File[] packageFiles = instructionsPath.toFile().listFiles();
-		for (File f : packageFiles) {
-			String classBaseName = INSTRUCTION_CLASS_PACKAGE + "." + f.getName().split("\\.")[0];
-			try {
-				Class<?> c = Class.forName(classBaseName);
-				if (instructionSuperclass.equals(c.getSuperclass()) && c.isAnnotationPresent(InstructionType.class)) {
-					// Add the appropriate constructor to the map
-//					InstructionClassProvider classProvider;
-//					for (Class<?> c : classProvider.getClasses(){
-						
-//					}
-					InstructionType typeAnnotation = c.getAnnotation(InstructionType.class);
-					LanguageOperation opCode = typeAnnotation.value();
-					for (Constructor<?> cons : c.getConstructors()) {
-						instructionMap.put(opCode, cons);
-						break;
-					}
-				}
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		// Use a class path search 
+		InstructionClassProvider classProvider = new ClasspathInstructionClassProvider();
+		for (Class<?> pClass : classProvider.getClasses()) {
+			InstructionType typeAnnotation = pClass.getAnnotation(InstructionType.class);
+			LanguageOperation opCode = typeAnnotation.value();
+			instructionMap.put(opCode, pClass.getConstructors()[0]);
 		}
 	}
 
