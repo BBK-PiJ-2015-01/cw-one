@@ -55,7 +55,6 @@ public class ClasspathInstructionClassProvider implements InstructionClassProvid
 				e.printStackTrace();
 			}
 		}
-		System.out.println(String.format("Found %d valid classes", instructionClasses.size()));
 		return instructionClasses;
 	}
 

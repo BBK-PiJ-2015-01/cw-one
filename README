@@ -1,0 +1,28 @@
+As per the coursework instructions the following classes have been amended.
+
+Instruction and it's sub-classes.
+Translator
+
+New classes have been added
+
+Implementations of Instruction as per the instructions
+
+InstructionClassProvider			- to provide a list of valid Instruction classes
+ClasspathInstructionClassProvider	- walks the class path searching to provide valid Instruction classes
+LanguageOperation					- An enum providing valid program operation codes
+
+BranchIfZeroInstruction				- a new branch-if-zero instruction
+UnconditionalBranchInstruction		- an unconditional branch
+
+New Instructions may be added if they satisfy the following conditions
+
+	they subclass Instruction
+	they have a InstructionType annotation
+	they have only one constructor
+
+The String label / String opCode constructor was removed from Instruction subclasses as it prevented 
+an unconditional branch Instruction.
+
+An version of the factorial program using branch-if-zero and unconditional branch Instructions has been provided
+
+	

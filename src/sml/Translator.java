@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,8 +12,13 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.Set;
 
-/*
- * The translator of a <b>S</b><b>M</b>al<b>L</b> program.
+/**
+ * A class to translate {@code Instruction}s from an input file. Instruction
+ * type are validated against {@code LanguageOperation}. The class path is
+ * searched for valid {@code Instruction}s.
+ * 
+ * @author sbaird02
+ *
  */
 public class Translator {
 
@@ -60,7 +63,7 @@ public class Translator {
 	 */
 	private void populateInstructionMap() {
 
-		// Use a class path search 
+		// Use a class path search
 		InstructionClassProvider classProvider = new ClasspathInstructionClassProvider();
 		for (Class<?> pClass : classProvider.getClasses()) {
 			InstructionType typeAnnotation = pClass.getAnnotation(InstructionType.class);
@@ -74,6 +77,7 @@ public class Translator {
 	// return "no errors were detected"
 	public boolean readAndTranslate(Labels lab, ArrayList<Instruction> prog) {
 
+		int lineCount = 0;
 		try (Scanner sc = new Scanner(new File(fileName))) {
 			// Scanner attached to the file chosen by the user
 			labels = lab;
@@ -83,6 +87,7 @@ public class Translator {
 
 			try {
 				line = sc.nextLine();
+				lineCount++;
 			} catch (NoSuchElementException ioE) {
 				// End of input file
 				// return false;
@@ -94,7 +99,18 @@ public class Translator {
 				String label = scan();
 
 				if (label.length() > 0) {
-					Instruction ins = getInstruction(label);
+					Instruction ins;
+					try {
+						ins = getInstruction(label);
+					} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+							| InvocationTargetException | IllegalStateException e) {
+						prog.clear();
+						String message = e.getMessage();
+						if (message == null) {
+							message =  e.getCause() != null ? e.getCause().getMessage() : "Cannot locate message";
+						}
+						throw new IllegalStateException(String.format("Program is invalid at line %d: %s", lineCount,  message));
+					}
 					if (ins != null) {
 						labels.addLabel(label);
 						program.add(ins);
@@ -103,6 +119,7 @@ public class Translator {
 
 				try {
 					line = sc.nextLine();
+					lineCount++;
 				} catch (NoSuchElementException ioE) {
 					// End of input file
 					// return false;
@@ -126,7 +143,8 @@ public class Translator {
 	// line should consist of an MML instruction, with its label already
 	// removed. Translate line into an instruction with label label
 	// and return the instruction
-	public Instruction getInstruction(String label) {
+	public Instruction getInstruction(String label)
+			throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 
 		if (line.equals(""))
 			return null;
@@ -138,7 +156,7 @@ public class Translator {
 		try {
 			opCode = LanguageOperation.valueOf(ins);
 		} catch (IllegalArgumentException | NullPointerException e) {
-			throw new IllegalStateException(String.format("Unknown instruction code: %s", ins));
+			throw new IllegalStateException(String.format("Cannot parse program, Unknown instruction code: %s", ins));
 		}
 		if (!instructionMap.containsKey(opCode)) {
 			throw new IllegalStateException(String.format("No instruction type for: %s", ins));
@@ -162,20 +180,14 @@ public class Translator {
 		}
 		// Generate the Instruction from its Constructor
 		Instruction validInstruction = null;
-		try {
-			validInstruction = (Instruction) constructor.newInstance(oArgs);
-		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-				| InvocationTargetException e) {
-			e.printStackTrace();
-			return null;
-		}
+		validInstruction = (Instruction) constructor.newInstance(oArgs);
 		// Update the set of all required labels
 		requiredLabels.addAll(validInstruction.getRequiredLabels());
 		return validInstruction;
-
 	}
 
-	private Object convertStringto(String value, Class<?> t) {
+	private Object convertStringto(String value, Class<?> t)
+			throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 
 		// Autobox the primitives
 		if (t.isPrimitive()) {
@@ -184,13 +196,7 @@ public class Translator {
 
 		for (Constructor<?> tCon : t.getConstructors()) {
 			if (tCon.getParameterCount() == 1 && tCon.getParameterTypes()[0].equals(String.class)) {
-				try {
-					return tCon.newInstance(value);
-				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-						| InvocationTargetException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				return tCon.newInstance(value);
 			}
 		}
 		return null;
@@ -216,16 +222,16 @@ public class Translator {
 
 	// Return the first word of line as an integer. If there is
 	// any error, return the maximum int
-	private int scanInt() {
-		String word = scan();
-		if (word.length() == 0) {
-			return Integer.MAX_VALUE;
-		}
+	// private int scanInt() {
+	// String word = scan();
+	// if (word.length() == 0) {
+	// return Integer.MAX_VALUE;
+	// }
 
-		try {
-			return Integer.parseInt(word);
-		} catch (NumberFormatException e) {
-			return Integer.MAX_VALUE;
-		}
-	}
+	// try {
+	// return Integer.parseInt(word);
+	// } catch (NumberFormatException e) {
+	// return Integer.MAX_VALUE;
+	// }
+	// }
 }
