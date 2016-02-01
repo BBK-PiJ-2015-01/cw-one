@@ -219,19 +219,4 @@ public class Translator {
 		line = line.substring(i);
 		return word;
 	}
-
-	// Return the first word of line as an integer. If there is
-	// any error, return the maximum int
-	// private int scanInt() {
-	// String word = scan();
-	// if (word.length() == 0) {
-	// return Integer.MAX_VALUE;
-	// }
-
-	// try {
-	// return Integer.parseInt(word);
-	// } catch (NumberFormatException e) {
-	// return Integer.MAX_VALUE;
-	// }
-	// }
 }
