@@ -77,6 +77,8 @@ public class Translator {
 	// return "no errors were detected"
 	public boolean readAndTranslate(Labels lab, ArrayList<Instruction> prog) {
 
+		final int LABEL_NOT_FOUND = -1;
+		
 		int lineCount = 0;
 		try (Scanner sc = new Scanner(new File(fileName))) {
 			// Scanner attached to the file chosen by the user
@@ -97,6 +99,10 @@ public class Translator {
 			while (line != null) {
 				// Store the label in label
 				String label = scan();
+				if (labels.indexOf(label) != LABEL_NOT_FOUND) {
+					String message = String.format("Duplicate label found: '%s'", label);
+					throw new IllegalStateException(String.format("Program is invalid at line %d: %s", lineCount,  message));
+				}
 
 				if (label.length() > 0) {
 					Instruction ins;
@@ -131,7 +137,7 @@ public class Translator {
 			return false;
 		}
 		// Check program validity with respect to branch statements
-		final int LABEL_NOT_FOUND = -1;
+
 		for (String label : requiredLabels) {
 			if (labels.indexOf(label) == LABEL_NOT_FOUND) {
 				throw new IllegalStateException(String.format("Invalid program: required label '%s' not found", label));
