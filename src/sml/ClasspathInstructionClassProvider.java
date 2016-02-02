@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.regex.PatternSyntaxException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -31,12 +32,18 @@ public class ClasspathInstructionClassProvider implements InstructionClassProvid
 	Class<?> instructionSuperclass = Instruction.class; // The superclass
 
 	private final String CLASS_SUFFIX_MATCHER = ".class";
-	private final String FILE_SEPARATOR = System.getProperty("file.separator");
+	private String FILE_SEPARATOR = System.getProperty("file.separator");
 	private final String PACKAGE_SEPARATOR = ".";
 	private final int EXPECTED_CONSTRUCTOR_COUNT = 1;
 
 	{
 		instructionClasses = new HashSet<>();
+		// Work around for Windows pattern error
+		try {
+			("a" + FILE_SEPARATOR + "b").replaceAll(FILE_SEPARATOR, ".");
+		} catch(PatternSyntaxException e) {
+			FILE_SEPARATOR = FILE_SEPARATOR + FILE_SEPARATOR;
+		}
 	}
 
 	@Override
